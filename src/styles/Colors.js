@@ -5,8 +5,8 @@ const Colors = {
   btnGray: "#4E505F",
   btnDark: "#2E2F38",
   gray: "#747477",
-  balck: "#00000",
-  white: "FFFFFF",
+  black: "#000000",
+  white: "#FFFFFF",
   result: "#46D5B2",
 };
 
