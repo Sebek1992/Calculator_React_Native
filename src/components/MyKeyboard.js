@@ -29,6 +29,45 @@ export default function MyKeyboard() {
     setResult(null);
   };
 
+  const firstNumberDisplay = () => {
+    if (result !== null) {
+      return (
+        <Text
+          style={
+            result < 99999
+              ? [Styles.screenFirstNumber, { color: Colors.result }]
+              : [
+                  Styles.screenFirstNumber,
+                  { fontSize: 50, color: Colors.result },
+                ]
+          }
+        >
+          {result?.toString()}
+        </Text>
+      );
+    }
+    if (firstNumber && firstNumber.length < 6) {
+      return <Text style={Styles.screenFirstNumber}>{firstNumber}</Text>;
+    }
+    if (firstNumber === "") {
+      return <Text style={Styles.screenFirstNumber}>{"0"}</Text>;
+    }
+    if (firstNumber.length > 5 && firstNumber < 8) {
+      return (
+        <Text style={[Styles.screenFirstNumber, { fontSize: 70 }]}>
+          {firstNumber}
+        </Text>
+      );
+    }
+    if (firstNumber.length > 7) {
+      return (
+        <Text style={[Styles.screenFirstNumber, { fontSize: 50 }]}>
+          {firstNumber}
+        </Text>
+      );
+    }
+  };
+
   const getResult = () => {
     switch (operation) {
       case "+":
@@ -54,7 +93,21 @@ export default function MyKeyboard() {
     }
   };
   return (
-    <>
+    <View style={Styles.viewBottom}>
+      <View
+        style={{
+          height: 120,
+          width: "90%",
+          justifyContent: "flex-end",
+          alignSelf: "center",
+        }}
+      >
+        <Text style={Styles.screenSecondNumber}>{secondNumber}</Text>
+        <Text style={{ color: "purple", fontSize: 50, fontWeight: "500" }}>
+          {operation}
+        </Text>
+        {firstNumberDisplay()}
+      </View>
       <View style={Styles.row}>
         <Button title="C" isGray onPress={clear} />
         <Button
@@ -63,7 +116,7 @@ export default function MyKeyboard() {
           onPress={() => handleOperationPress("+/-")}
         />
         <Button title="%" isGray onPress={() => handleOperationPress("%")} />
-        <Button title="+" isGray onPress={() => handleOperationPress("/")} />
+        <Button title="/" isGray onPress={() => handleOperationPress("/")} />
       </View>
       <View style={Styles.row}>
         <Button title="7" onPress={() => handleNumberPress("7")} />
@@ -90,8 +143,8 @@ export default function MyKeyboard() {
           title="<"
           onPress={() => setFirstNumber(firstNumber.slice(0, -1))}
         />
-        <Button title="-" isBlue onPress={() => getResult()} />
+        <Button title="=" isBlue onPress={() => getResult()} />
       </View>
-    </>
+    </View>
   );
 }
