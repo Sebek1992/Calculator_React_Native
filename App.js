@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Switch, SafeAreaView } from "react-native";
+import { StyleSheet, Switch, SafeAreaView } from "react-native";
 import { ThemeContext } from "./src/context/ThemeContext";
 import Colors from "./src/styles/Colors.js";
 import MyKeyboard from "./src/components/MyKeyboard.js";

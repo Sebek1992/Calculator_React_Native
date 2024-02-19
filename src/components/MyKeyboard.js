@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Button from "./Button";
 import { View, Text } from "react-native";
 import { Styles } from "../styles/GlobalStyles.js";
@@ -8,18 +8,27 @@ export default function MyKeyboard() {
   const [firstNumber, setFirstNumber] = useState("");
   const [secondNumber, setSecondNumber] = useState("");
   const [operation, setOperation] = useState("");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState(null); //
 
-  const handleNumberPress = (buttonValue: string) => {
+  const handleNumberPress = (buttonValue) => {
+    if (buttonValue === "." && firstNumber.includes(".")) return; //
     if (firstNumber.length < 10) {
       setFirstNumber(firstNumber + buttonValue);
     }
   };
 
-  const handleOperationPress = (buttonValue: string) => {
-    setOperation(buttonValue);
-    setSecondNumber(firstNumber);
-    setFirstNumber("");
+  const handleOperationPress = (buttonValue) => {
+    if (buttonValue === "+/-") {
+      if (firstNumber !== "") {
+        setFirstNumber((parseFloat(firstNumber) * -1).toString());
+      } else if (secondNumber !== "") {
+        setSecondNumber((parseFloat(secondNumber) * -1).toString());
+      }
+    } else {
+      setOperation(buttonValue);
+      setSecondNumber(firstNumber);
+      setFirstNumber("");
+    }
   };
 
   const clear = () => {
@@ -45,53 +54,44 @@ export default function MyKeyboard() {
           {result?.toString()}
         </Text>
       );
-    }
-    if (firstNumber && firstNumber.length < 6) {
-      return <Text style={Styles.screenFirstNumber}>{firstNumber}</Text>;
-    }
-    if (firstNumber === "") {
-      return <Text style={Styles.screenFirstNumber}>{"0"}</Text>;
-    }
-    if (firstNumber.length > 5 && firstNumber < 8) {
-      return (
-        <Text style={[Styles.screenFirstNumber, { fontSize: 70 }]}>
-          {firstNumber}
-        </Text>
-      );
-    }
-    if (firstNumber.length > 7) {
-      return (
-        <Text style={[Styles.screenFirstNumber, { fontSize: 50 }]}>
-          {firstNumber}
-        </Text>
-      );
+    } else {
+      // Domyślne wyświetlanie liczby pierwszej
+      return <Text style={Styles.screenFirstNumber}>{firstNumber || "0"}</Text>;
     }
   };
 
   const getResult = () => {
+    const first = parseFloat(secondNumber);
+    const second = parseFloat(firstNumber);
     switch (operation) {
       case "+":
-        clear();
-        setResult(parseInt(secondNumber) + parseInt(firstNumber));
+        setResult(first + second);
         break;
       case "-":
-        clear();
-        setResult(parseInt(secondNumber) - parseInt(firstNumber));
+        setResult(first - second);
         break;
       case "*":
-        clear();
-        setResult(parseInt(secondNumber) * parseInt(firstNumber));
+        setResult(first * second);
         break;
-      case "+":
-        clear();
-        setResult(parseInt(secondNumber) / parseInt(firstNumber));
+      case "/":
+        if (second === 0) {
+          setResult("Error");
+        } else {
+          setResult(first / second);
+        }
+        break;
+      case "%":
+        setResult((first * second) / 100);
         break;
       default:
-        clear();
         setResult(0);
         break;
     }
+    setFirstNumber("");
+    setSecondNumber("");
+    setOperation("");
   };
+
   return (
     <View style={Styles.viewBottom}>
       <View
